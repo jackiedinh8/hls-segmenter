@@ -8,3 +8,6 @@ autoreconf -i
 make
 make install
 ```
+TODO-list:
+ - support other audio & video formats.
+ - support fixed duration.
