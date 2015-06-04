@@ -10,7 +10,7 @@ make install
 
 Usage:
 ```
-Usage hlsegmneter [options] ...
+Usage: hlsegmneter [options] ...
 
 HTTP Live Stream - Create hls segments from video files (h264 & aac).
 
