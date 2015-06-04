@@ -17,7 +17,7 @@ HTTP Live Stream - Create hls segments from video files (h264 & aac).
      -i, --input FILE          Video file to segment.
      -p, --output-dir DIR      Directory to store the HLS segments.
      -n, --stream-name NAME    Name of the HLS stream.
-     -u, --url-prefix URL      Prefix for web address of the HLS segments.
+     -u, --url-prefix URL      Specify urls of the HLS segments.
      -c, --num-segment NUMBER  Number of output segments.
      -v, --verbose             Show Log.
      -h, --help                This help.
