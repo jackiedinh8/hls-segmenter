@@ -83,12 +83,14 @@ hls_display_usage()
     printf("\n");
     printf("\t-i, --input FILE             Video file to segment\n");
 //    printf("\t-d, --duration SECONDS       Duration of each segment (default: 10 seconds)\n");
-    printf("\t-p, --output-dir PREFIX      Directory to store the TS segments\n");
-    printf("\t-m, --m3u8-file FILE         Name of hls segment, files will be appended FILE.m3m8, FILE-1.ts etc\n");
-    printf("\t-u, --url-prefix PREFIX      Prefix for web address of segments, e.g. http://foo.bar/video/\n");
-    printf("\t-n, --num-segment NUMBER     Number of segments to keep on disk\n");
+    printf("\t-p, --output-dir DIR         Directory to store the HLS segments\n");
+    printf("\t-n, --stream-name NAME       Name of the HLS stream\n");
+    printf("\t-u, --url-prefix URL         Specify urls of the segments, e.g. http://foo.bar/video/\n");
+    printf("\t-c, --num-segment NUMBER     Number of segments to keep on disk\n");
+    printf("\t-v, --verbose                Show log\n");
     printf("\t-h, --help                   This help\n");
     printf("\n");
+    printf("The output files will be appended DIR/NAME.m3m8, DIR/NAME-1.ts etc\n");
     printf("\n");
 
     exit(0);
@@ -166,7 +168,7 @@ hls_parse_args(hls_context_t *ctx, int argc, char** argv)
         { "input",         required_argument, NULL, 'i' },
         //{ "duration",      required_argument, NULL, 'd' },
         { "output-prefix", required_argument, NULL, 'p' },
-        { "hls-name",     required_argument, NULL, 'n' },
+        { "stream-name",   required_argument, NULL, 'n' },
         { "url-prefix",    required_argument, NULL, 'u' },
         { "num-segments",  required_argument, NULL, 'c' },
         { "help",          no_argument,       NULL, 'h' },
@@ -215,7 +217,8 @@ hls_parse_args(hls_context_t *ctx, int argc, char** argv)
                 if (optarg == endptr || options.num_segments < 0 || options.num_segments >= LONG_MAX) {
                     fprintf(stderr, "Maximum number of ts files (%s) invalid\n", optarg);
                     exit(1);
-                }   
+                }
+                ctx->num_segments = options.num_segments;
                 break;
                 
             case 'h':
@@ -230,6 +233,7 @@ hls_parse_args(hls_context_t *ctx, int argc, char** argv)
     /* Check required args where set*/
     if (options.input_file == NULL) {
         fprintf(stderr, "Please specify an input file.\n");
+        hls_display_usage();
         exit(1);
     }
     ctx->infile.data = malloc(strlen(options.input_file)+1);
@@ -239,6 +243,7 @@ hls_parse_args(hls_context_t *ctx, int argc, char** argv)
 
     if (options.hls_name == NULL) {
         fprintf(stderr, "Please specify name of stream.\n");
+        hls_display_usage();
         exit(1);
     }
     ctx->name.data = malloc(strlen(options.hls_name)+1);
@@ -248,7 +253,7 @@ hls_parse_args(hls_context_t *ctx, int argc, char** argv)
 
     if (options.output_prefix == NULL) {
         options.output_prefix = "./ts.files/";
-        fprintf(stderr, "Use default output prefix.\n");
+        fprintf(stderr, "Use default output prefix %s\n","./ts.files/");
     }
 
     //check dir and trailing '/'

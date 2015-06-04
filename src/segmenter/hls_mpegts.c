@@ -296,6 +296,8 @@ hls_write_record(hls_session_t *s)
         return -3;
     }
 
+    s->num_segments++;
+
     close(fd);
     return 0;
 }
@@ -1361,12 +1363,17 @@ hls_handle_stream(hls_session_t *s)
    static int cnt = 0;
    hls_stream_ctx_t     *hctx = s->stream_ctx;
    hls_mpegts_ctx_t     *ctx = s->mpegts_ctx;
+   hls_context_t        *conf = (hls_context_t*)s->ctx;
    AVPacket              packet;
    char                 *p, *end;
    int                   fd, n;
    int                   i = 0;
 
    while(av_read_frame(hctx->pFormatCtx, &packet)>=0) {
+
+      if ( conf->num_segments && conf->num_segments-1 < s->num_segments ) {
+         goto out;
+      }
 
       if(packet.stream_index==hctx->audio_idx) {
 
@@ -1389,7 +1396,8 @@ hls_handle_stream(hls_session_t *s)
    }
   
    hls_close_fragment(s);
-        
+   
+out:     
    if ( ctx->record ) {
       DEBUG("finalizing playlist %s ...",ctx->playlist.data);
 
@@ -1408,6 +1416,7 @@ hls_handle_stream(hls_session_t *s)
       p += n;
       n = write(fd, buffer, p - buffer);
    }
+
 }
 
 void

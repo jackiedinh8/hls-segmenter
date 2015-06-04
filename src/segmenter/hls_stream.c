@@ -563,6 +563,7 @@ hls_segment_file(hls_context_t *hls_ctx, const char* file)
 
    hls_write_mpegts(session);
 
+   return 0;
 }
 
 int

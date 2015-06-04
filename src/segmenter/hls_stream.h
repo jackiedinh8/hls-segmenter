@@ -98,6 +98,7 @@ struct hls_stream_ctx {
 struct hls_session {
    void                 *ctx; // configuration, to be defined.
    uint32_t              current_ts;
+   uint64_t              num_segments;
    hls_stream_t         *in_streams;
    hls_codec_ctx_t      *codec_ctx;
    hls_stream_ctx_t     *stream_ctx;

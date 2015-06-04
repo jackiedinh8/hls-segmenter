@@ -57,6 +57,8 @@ struct hls_context {
    hls_str_t          name;
    uint64_t           frags_per_key;
    uint64_t           granularity;
+
+   uint64_t           num_segments;
 };
 
 typedef struct hls_options hls_options_t;
